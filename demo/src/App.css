@@ -1,0 +1,40 @@
+@media (min-width: 801px) {
+  .leftcolumn {
+    position: sticky;
+    display: inline-block;
+    max-height: 90vh;
+    overflow-y: auto;
+    top: 2.25rem;
+    bottom: 0;
+  }
+}
+
+.disabledcard {
+  opacity: 0.4;
+  filter: alpha(opacity=40);
+}
+
+.imagenoteleft {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  left: 10px;
+  color: white;
+  text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+}
+
+.imagenoteright {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  right: 10px;
+  color: white;
+  text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+}
+
+.bluecard {
+  background: rgb(32,51,71);
+  background: linear-gradient(172deg, rgb(32, 51, 71) 0%, rgb(43 77 113) 72%, rgb(37, 47, 82) 100%, rgb(55, 90, 112) 100%);
+  border-radius: 1.5em;
+  margin-top: 1.5rem;
+}

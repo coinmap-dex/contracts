@@ -1,0 +1,30 @@
+[
+    {
+        "name": "WBNB",
+        "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
+    },
+    {
+        "name": "BUSD",
+        "address": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"
+    },
+    {
+        "name": "USDT",
+        "address": "0x55d398326f99059fF775485246999027B3197955"
+    },
+    {
+        "name": "CAKE",
+        "address": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82"
+    },
+    {
+        "name": "MXY",
+        "address": "0x965d3704de812f5e1e7eef1ac22fe92174258bd9"
+    },
+    {
+        "name": "FAM",
+        "address": "0x4556a6f454f15c4cd57167a62bda65a6be325d1f"
+    },
+    {
+        "name": "DOR",
+        "address": "0x3465fD2D9f900e34280aBab60E8d9987B5b5bb47"
+    }
+]
