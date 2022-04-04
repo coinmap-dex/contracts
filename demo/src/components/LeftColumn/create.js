@@ -6,6 +6,7 @@ import useToken from "../../hooks/useToken";
 import { useState } from "react";
 import { getTokenName } from "../../utils";
 import list from "../../configs/list.json";
+import core from '../../configs/core.json';
 
 const signData = (maker, payToken, buyToken, payAmount, buyAmount, deadline, salt) => ({
   method: 'eth_signTypedData_v4',
@@ -14,7 +15,7 @@ const signData = (maker, payToken, buyToken, payAmount, buyAmount, deadline, sal
       name: "CoinmapDex",
       version: "1",
       chainId: 56,
-      verifyingContract: "0x0bAD3B7B185974c0DF0C346aB0A3bb9e8cE15580"
+      verifyingContract: core.contracts.CoinmapDex.address
     },
     primaryType: 'Order',
     message: {

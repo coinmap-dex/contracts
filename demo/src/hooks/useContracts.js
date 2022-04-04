@@ -38,3 +38,8 @@ export function useContract(address, ABI, withSignerIfPossible = true) {
 export function useErc20TokenContract(address) {
     return useContract(address, erc20abi, true)
 }
+
+export function useCoinmapDexContract() {
+    const c = core.contracts.CoinmapDex;
+    return useContract(c.address, c.abi, true)
+}

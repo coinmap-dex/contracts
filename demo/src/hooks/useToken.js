@@ -1,36 +1,37 @@
 import { useCallback, useState, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
-import { useErc20TokenContract } from "./useContracts";
+import { useErc20TokenContract, useCoinmapDexContract } from "./useContracts";
 import useReadLocalStorage from "./useReadLocalStorage";
 
 const useToken = (address) => {
   const { account } = useWeb3React();
-  const token = useErc20TokenContract(address)
+  const token = useErc20TokenContract(address);
+  const coinmap = useCoinmapDexContract();
 
   const [isApproved, setApprove] = useState(false)
   const blocknumber = useReadLocalStorage('blocknumber')
 
   const fetchAllowance = useCallback(async () => {
     if (token) {
-      const allowance = await token.allowance(account, '0x0bAD3B7B185974c0DF0C346aB0A3bb9e8cE15580')
+      const allowance = await token.allowance(account, coinmap.address)
       setApprove(allowance.gt("1000000000000000000"));
     }
-  }, [account, token, blocknumber])
+  }, [account, coinmap, token, blocknumber])
 
   useEffect(() => {
     fetchAllowance()
-  }, [fetchAllowance, account, token, blocknumber])
+  }, [fetchAllowance, account, coinmap, token, blocknumber])
 
   const approve = useCallback(
     async () => {
       try {
-        return await token?.approve('0x0bAD3B7B185974c0DF0C346aB0A3bb9e8cE15580', "1000000000000000000000000")
+        return await token?.approve(coinmap.address, "1000000000000000000000000")
       } catch (e) {
         console.error(e)
         return null
       }
     },
-    [token]
+    [coinmap, token]
   )
 
   return { isApproved, approve, blocknumber }
