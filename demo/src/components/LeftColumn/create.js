@@ -4,8 +4,8 @@ import { useWeb3React } from "@web3-react/core";
 import { BigNumber } from '@ethersproject/bignumber'
 import useToken from "../../hooks/useToken";
 import { useState } from "react";
-import { getTokenName } from "../../utils";
-import list from "../../configs/list.json";
+import { getTokenName, amountToBN } from "../../utils";
+import { tokens } from "../../configs/list.json";
 import core from '../../configs/core.json';
 
 const signData = (maker, payToken, buyToken, payAmount, buyAmount, deadline, salt) => ({
@@ -47,8 +47,8 @@ function Create(props) {
 
   const [pay, setPayAmount] = useState(1);
   const [buy, setBuyAmount] = useState(1);
-  const [payToken, setPayToken] = useState(list[4].address);
-  const [buyToken, setBuyToken] = useState(list[1].address);
+  const [payToken, setPayToken] = useState(tokens[4].address);
+  const [buyToken, setBuyToken] = useState(tokens[1].address);
   const { approve, isApproved } = useToken(payToken);
 
   const [pendingTx, setPendingTx] = useState(null);
@@ -73,7 +73,7 @@ function Create(props) {
                         <div class="select ">
                           <select name="payToken"
                             value={payToken} onChange={(e) => { setPayToken(e.target.value) }}>
-                            {list.map((v, k) => (<option value={v.address}>{v.name}</option>))}
+                            {tokens.map((v, k) => (<option value={v.address}>{v.symbol}</option>))}
                           </select>
                         </div>
                       </div>
@@ -95,7 +95,7 @@ function Create(props) {
                         <div class="select ">
                           <select name="buyToken"
                             value={buyToken} onChange={(e) => { setBuyToken(e.target.value) }}>
-                            {list.map((v, k) => (<option value={v.address}>{v.name}</option>))}
+                            {tokens.map((v, k) => (<option value={v.address}>{v.symbol}</option>))}
                           </select>
                         </div>
                       </div>
@@ -138,8 +138,8 @@ function Create(props) {
                               setPendingTx(true)
                               const deadline = Math.round(Date.now() / 1000) + 7 * 24 * 60 * 60;
                               const salt = Web3.utils.randomHex(32);
-                              const payAmount = BigNumber.from(pay).mul('1000000000000000000').toString();
-                              const buyAmount = BigNumber.from(buy).mul('1000000000000000000').toString();
+                              const payAmount = amountToBN(pay, payToken).toString();
+                              const buyAmount = amountToBN(buy, buyToken).toString();
                               const sig = await library.provider.request(signData(account, payToken, buyToken, payAmount, buyAmount, deadline, salt))
                               await axios.post('https://api.dextrading.io/api/v1/limitorder/create', { maker: account, payToken, buyToken, payAmount, buyAmount, deadline, salt, sig })
                               setPendingTx(false)

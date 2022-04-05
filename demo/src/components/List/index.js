@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { useState, useEffect } from 'react';
 import useAxios from "../../hooks/useAxios";
-import { getTokenName, formatBalance } from "../../utils";
+import { getTokenName, formatAmount } from "../../utils";
 
 function List() {
   const context = useWeb3React();
@@ -36,14 +36,18 @@ function List() {
           {data.map((v, k) => {
             return (<tr>
               <td>{getTokenName(v.payToken)}</td>
-              <td>{formatBalance(v.payAmount)}</td>
+              <td>{formatAmount(v.payAmount, v.payToken)}</td>
               <td>{getTokenName(v.buyToken)}</td>
-              <td>{formatBalance(v.buyAmount)}</td>
+              <td>{formatAmount(v.buyAmount, v.buyToken)}</td>
               <td>{new Date(v.deadline * 1000).toGMTString()}</td>
-              <td><span class="tag is-success">
-                Open
-                <button class="delete is-small"></button>
-              </span></td>
+              <td>
+                {v.status == 0 &&
+                  <span class="tag is-success">
+                    Open <button class="delete is-small"></button>
+                  </span>}
+                {v.status == 1 && <span class="tag is-primary">Filled</span>}
+                {v.status == 2 && <span class="tag is-warning">Canceled</span>}
+              </td>
             </tr>)
           })}
         </tbody>
