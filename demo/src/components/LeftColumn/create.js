@@ -45,8 +45,8 @@ function Create(props) {
   const context = useWeb3React();
   const { account, library } = context;
 
-  const [payAmount, setPayAmount] = useState(1);
-  const [buyAmount, setBuyAmount] = useState(1);
+  const [pay, setPayAmount] = useState(1);
+  const [buy, setBuyAmount] = useState(1);
   const [payToken, setPayToken] = useState(list[4].address);
   const [buyToken, setBuyToken] = useState(list[1].address);
   const { approve, isApproved } = useToken(payToken);
@@ -67,7 +67,7 @@ function Create(props) {
                     <div class="field has-addons">
                       <div class="control  is-expanded">
                         <input class="input is-fullwidth" type="text" placeholder="Amount of money"
-                          value={payAmount} onChange={(e) => setPayAmount(parseInt(e.target.value))} />
+                          value={pay} onChange={(e) => setPayAmount(parseInt(e.target.value))} />
                       </div>
                       <div class="control">
                         <div class="select ">
@@ -89,7 +89,7 @@ function Create(props) {
                     <div class="field has-addons">
                       <div class="control  is-expanded">
                         <input class="input is-fullwidth" type="text" placeholder="Amount of money"
-                          value={buyAmount} onChange={(e) => setBuyAmount(parseInt(e.target.value))} />
+                          value={buy} onChange={(e) => setBuyAmount(parseInt(e.target.value))} />
                       </div>
                       <div class="control">
                         <div class="select ">
@@ -110,7 +110,7 @@ function Create(props) {
                   <div class="field-body">
                     <div class="field">
                       <div class="control">
-                        <input class="input" type="text" placeholder="Amount of money" disabled value={buyAmount / payAmount} />
+                        <input class="input" type="text" placeholder="Amount of money" disabled value={buy / pay} />
                       </div>
                     </div>
                     <div class="field">
@@ -133,15 +133,15 @@ function Create(props) {
                         {isApproved
                           ? <button
                             className={`button is-info is-fullwidth ${pendingTx ? "is-loading" : ""}`}
-                            disabled={payAmount <= 0 || buyAmount <= 0 || payToken == buyToken}
+                            disabled={pay <= 0 || buy <= 0 || payToken == buyToken}
                             onClick={async () => {
                               setPendingTx(true)
                               const deadline = Math.round(Date.now() / 1000) + 7 * 24 * 60 * 60;
                               const salt = Web3.utils.randomHex(32);
-                              const pay = BigNumber.from(payAmount).mul('1000000000000000000').toString();
-                              const buy = BigNumber.from(buyAmount).mul('1000000000000000000').toString();
-                              const sig = await library.provider.request(signData(account, payToken, buyToken, pay, buy, deadline, salt))
-                              await axios.post('https://api.dextrading.io/api/v1/limitorder/create', { account, payToken, buyToken, pay, buy, deadline, salt, sig })
+                              const payAmount = BigNumber.from(pay).mul('1000000000000000000').toString();
+                              const buyAmount = BigNumber.from(buy).mul('1000000000000000000').toString();
+                              const sig = await library.provider.request(signData(account, payToken, buyToken, payAmount, buyAmount, deadline, salt))
+                              await axios.post('https://api.dextrading.io/api/v1/limitorder/create', { maker: account, payToken, buyToken, payAmount, buyAmount, deadline, salt, sig })
                               setPendingTx(false)
                             }}>
                             Submit order

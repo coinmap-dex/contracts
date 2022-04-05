@@ -3,7 +3,7 @@
     "chainId": "56",
     "contracts": {
         "CoinmapDex": {
-            "address": "0x8ce1780d7C15D747af0BFd8b61F8D11D08BD2A71",
+            "address": "0xa7e44aE03307de5192944520251e95e89A56A953",
             "abi": [
                 {
                     "inputs": [
@@ -16,10 +16,34 @@
                             "internalType": "address",
                             "name": "_feeTo",
                             "type": "address"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "_feeRate",
+                            "type": "uint256"
                         }
                     ],
                     "stateMutability": "nonpayable",
                     "type": "constructor"
+                },
+                {
+                    "anonymous": false,
+                    "inputs": [
+                        {
+                            "indexed": true,
+                            "internalType": "address",
+                            "name": "previousOwner",
+                            "type": "address"
+                        },
+                        {
+                            "indexed": true,
+                            "internalType": "address",
+                            "name": "newOwner",
+                            "type": "address"
+                        }
+                    ],
+                    "name": "OwnershipTransferred",
+                    "type": "event"
                 },
                 {
                     "anonymous": false,
@@ -135,11 +159,29 @@
                             "internalType": "address[]",
                             "name": "paths",
                             "type": "address[]"
+                        },
+                        {
+                            "internalType": "address[]",
+                            "name": "feePaths",
+                            "type": "address[]"
                         }
                     ],
                     "name": "executeOrder",
                     "outputs": [],
                     "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "feeRate",
+                    "outputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "view",
                     "type": "function"
                 },
                 {
@@ -260,6 +302,65 @@
                     "type": "function"
                 },
                 {
+                    "inputs": [
+                        {
+                            "internalType": "address",
+                            "name": "_feeTo",
+                            "type": "address"
+                        }
+                    ],
+                    "name": "onCriticalBug",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "owner",
+                    "outputs": [
+                        {
+                            "internalType": "address",
+                            "name": "",
+                            "type": "address"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "renounceOwnership",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "_feeRate",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "setFeeRate",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "address",
+                            "name": "_feeTo",
+                            "type": "address"
+                        }
+                    ],
+                    "name": "setFeeTo",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
                     "inputs": [],
                     "name": "swapRouter",
                     "outputs": [
@@ -270,6 +371,19 @@
                         }
                     ],
                     "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "address",
+                            "name": "newOwner",
+                            "type": "address"
+                        }
+                    ],
+                    "name": "transferOwnership",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
                     "type": "function"
                 },
                 {

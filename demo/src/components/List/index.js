@@ -36,9 +36,9 @@ function List() {
           {data.map((v, k) => {
             return (<tr>
               <td>{getTokenName(v.payToken)}</td>
-              <td>{formatBalance(v.pay)}</td>
+              <td>{formatBalance(v.payAmount)}</td>
               <td>{getTokenName(v.buyToken)}</td>
-              <td>{formatBalance(v.buy)}</td>
+              <td>{formatBalance(v.buyAmount)}</td>
               <td>{new Date(v.deadline * 1000).toGMTString()}</td>
               <td><span class="tag is-success">
                 Open

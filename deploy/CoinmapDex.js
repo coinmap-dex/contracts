@@ -6,7 +6,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
 
   await deploy("CoinmapDex", {
     from: deployer,
-    args: [PANCAKE_ROUTER, deployer],
+    args: [PANCAKE_ROUTER, deployer, 25],
     log: true,
   })
 }
