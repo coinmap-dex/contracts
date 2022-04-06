@@ -1,6 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { useState, useEffect } from 'react';
 import useAxios from "../../hooks/useAxios";
+import useCoinmapDex from "../../hooks/useCoinmapDex";
 import { getTokenName, formatAmount } from "../../utils";
 
 function List() {
@@ -11,6 +12,7 @@ function List() {
     url: `https://api.dextrading.io/api/v1/limitorder?account=${account}`,
     headers: JSON.stringify({ accept: '*/*' }),
   });
+  const { cancelOrder } = useCoinmapDex();
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -43,7 +45,10 @@ function List() {
               <td>
                 {v.status == 0 &&
                   <span class="tag is-success">
-                    Open <button class="delete is-small"></button>
+                    Open <button class="delete is-small"
+                      onClick={async () => {
+                        await cancelOrder(account, v.salt)
+                      }}></button>
                   </span>}
                 {v.status == 1 && <span class="tag is-primary">Filled</span>}
                 {v.status == 2 && <span class="tag is-warning">Canceled</span>}
