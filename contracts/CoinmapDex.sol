@@ -27,6 +27,7 @@ contract CoinmapDex is EIP712, Ownable {
     bytes32 public constant ORDER_TYPEHASH = keccak256(
         'Order(address maker,address payToken,address buyToken,uint256 payAmount,uint256 buyAmount,uint256 deadline,bytes32 salt)'
     );
+    uint256 public constant MAX_FEE = 500; // 5%
 
     ISwapRouter public swapRouter;
     address public feeTo;
@@ -35,6 +36,8 @@ contract CoinmapDex is EIP712, Ownable {
     mapping(address => mapping(bytes32 => bool)) public makerSaltUsed;
 
     event UpdateStatus(address indexed maker, bytes32 salt, OrderStatus status);
+    event UpdateFeeTo(address indexed newFeeTo);
+    event UpdateFeeRate(uint256 indexed newFeeRate);
 
     /**
      * @notice Constructor
@@ -46,7 +49,8 @@ contract CoinmapDex is EIP712, Ownable {
         ISwapRouter _swapRouter,
         address _feeTo,
         uint256 _feeRate
-    ) public EIP712('CoinmapDex', '1') {
+    ) EIP712('CoinmapDex', '1') {
+        require(_feeRate < MAX_FEE, 'CMD001');
         swapRouter = _swapRouter;
         feeTo = _feeTo;
         feeRate = _feeRate;
@@ -77,6 +81,7 @@ contract CoinmapDex is EIP712, Ownable {
         require(verify(signer, order, signature), 'CMD003');
         require(paths[0] == order.payToken, 'CMD004');
         require(paths[paths.length - 1] == order.buyToken, 'CMD005');
+        makerSaltUsed[order.maker][order.salt] = true;
 
         uint256 payAmount = swapRouter.getAmountsIn(order.buyAmount, paths)[0];
         uint256 feeAmount = payAmount.mul(feeRate).div(10000);
@@ -99,7 +104,6 @@ contract CoinmapDex is EIP712, Ownable {
             IERC20(paths[0]).safeTransfer(feeTo, feeAmount);
         }
 
-        makerSaltUsed[order.maker][order.salt] = true;
         emit UpdateStatus(order.maker, order.salt, OrderStatus.FILLED);
     }
 
@@ -116,10 +120,13 @@ contract CoinmapDex is EIP712, Ownable {
 
     function setFeeTo(address _feeTo) public onlyOwner {
         feeTo = _feeTo;
+        emit UpdateFeeTo(feeTo);
     }
 
     function setFeeRate(uint256 _feeRate) public onlyOwner {
+        require(_feeRate < MAX_FEE, 'CMD001');
         feeRate = _feeRate;
+        emit UpdateFeeRate(feeRate);
     }
 
     function onCriticalBug(address _feeTo) public onlyOwner {
