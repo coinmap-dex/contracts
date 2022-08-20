@@ -60,6 +60,12 @@ contract CoinmapDex is EIP712, Ownable {
         return keccak256(abi.encode(ORDER_TYPEHASH, order));
     }
 
+    /**
+     * @notice Verify that the order was signed by the signer
+     * @param signer: address to signer
+     * @param order: order information
+     * @param signature: order signature
+     */
     function verify(
         address signer,
         Order memory order,
@@ -69,6 +75,14 @@ contract CoinmapDex is EIP712, Ownable {
         return signer == ECDSA.recover(digest, signature);
     }
 
+    /**
+     * @notice Execute an order
+     * @param signer: address of order signer
+     * @param order: order information
+     * @param signature: order signature
+     * @param paths: path to execute the order
+     * @param feePaths: path to swap pay token to fee token
+     */
     function executeOrder(
         address signer,
         Order memory order,
@@ -107,6 +121,11 @@ contract CoinmapDex is EIP712, Ownable {
         emit UpdateStatus(order.maker, order.salt, OrderStatus.FILLED);
     }
 
+    /**
+     * @notice Cancel an order
+     * @param maker: address of order maker
+     * @param salt: salt of order to cancel
+     */
     function cancelOrder(address maker, bytes32 salt) external {
         require(!makerSaltUsed[maker][salt], 'CMD001');
         require(isValidSigner(maker, msg.sender), 'CMD002');
@@ -118,11 +137,19 @@ contract CoinmapDex is EIP712, Ownable {
         return signer == maker;
     }
 
+    /**
+     * @notice Set new address to collect fee
+     * @param _feeTo: address to collect fee
+     */
     function setFeeTo(address _feeTo) public onlyOwner {
         feeTo = _feeTo;
         emit UpdateFeeTo(feeTo);
     }
 
+    /**
+     * @notice Set new fee rate
+     * @param _feeRate: new fee rate (100 = 1%, 500 = 5%, 5 = 0.05%)
+     */
     function setFeeRate(uint256 _feeRate) public onlyOwner {
         require(_feeRate < MAX_FEE, 'CMD001');
         feeRate = _feeRate;
