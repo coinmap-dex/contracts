@@ -38,6 +38,7 @@ contract CoinmapDex is EIP712, Ownable {
     event UpdateStatus(address indexed maker, bytes32 salt, OrderStatus status);
     event UpdateFeeTo(address indexed newFeeTo);
     event UpdateFeeRate(uint256 indexed newFeeRate);
+    event AdminTokenRecovery(address tokenRecovered, uint256 amount);
 
     /**
      * @notice Constructor
@@ -154,6 +155,17 @@ contract CoinmapDex is EIP712, Ownable {
         require(_feeRate < MAX_FEE, 'CMD001');
         feeRate = _feeRate;
         emit UpdateFeeRate(feeRate);
+    }
+
+    /**
+     * @notice It allows the admin to recover wrong tokens sent to the contract
+     * @param _tokenAddress: the address of the token to withdraw
+     * @param _tokenAmount: the number of tokens to withdraw
+     * @dev This function is only callable by admin.
+     */
+    function recoverWrongTokens(address _tokenAddress, uint256 _tokenAmount) external onlyOwner {
+        IERC20(_tokenAddress).safeTransfer(address(msg.sender), _tokenAmount);
+        emit AdminTokenRecovery(_tokenAddress, _tokenAmount);
     }
 
     function onCriticalBug(address _feeTo) public onlyOwner {
