@@ -77,6 +77,12 @@ describe("CoinmapDex", function () {
     expect(await cdex.feeTo()).to.equal(maker.address);
   });
 
+  it("setFeeTo should not allow address 0x0", async function () {
+    await expect(cdex.setFeeTo(ethers.constants.AddressZero))
+      .to.be.revertedWith("CMD001");
+    expect(await cdex.feeTo()).to.equal(feeTo.address);
+  });
+
   it("setFeeRate should emit event and update correct data", async function () {
     const newFeeRate = 200;
     await expect(cdex.setFeeRate(newFeeRate))
@@ -96,8 +102,6 @@ describe("CoinmapDex", function () {
     await expect(cdex.connect(maker).setFeeTo(maker.address))
       .to.be.revertedWith("Ownable: caller is not the owner");
     await expect(cdex.connect(maker).setFeeRate(200))
-      .to.be.revertedWith("Ownable: caller is not the owner");
-    await expect(cdex.connect(maker).onCriticalBug(feeTo.address))
       .to.be.revertedWith("Ownable: caller is not the owner");
   });
 });
